@@ -49,7 +49,7 @@ const validateMovie = (movie) => {
         releaseYear: Joi.number().min(1888).required(), 
         director: Joi.string().min(5).max(50).required(),
         image: Joi.string().optional(),
-    });
+    }); 
 
     return schema.validate(movie); 
 };

@@ -1,11 +1,11 @@
-const { User, validateUser } = require('../models/userModel'); 
+const { User, validateUserRegistration } = require('../models/userModel'); 
 const bcrypt = require('bcrypt');
 const _ = require('lodash'); 
 
 
 const addUser = async (req, res) => {
     try {
-        const { error } = validateUser(req.body);
+        const { error } = validateUserRegistration(req.body);
         if (error) {
             return res.status(422).send(error.details[0].message);
         }
