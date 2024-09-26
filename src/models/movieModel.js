@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const config = require('config');
 const Joi = require('joi');
 
-const MovieSchema = new mongoose.Schema({
+const movieSchema = new mongoose.Schema({
     name: {
         type: String,
         minLength: 5,
@@ -41,16 +41,20 @@ const MovieSchema = new mongoose.Schema({
         timestamps: true
     });
 
-const Movie = mongoose.model('Movie', MovieSchema);
+const Movie = mongoose.model('Movie', movieSchema);
 const validateMovie = (movie) => {
-    const schema = {
-        name: Joi.string.min(5).max(50).required(),
-        genre: Joi.string.min(5).max(50).required(),
-        releaseYear: Joi.number().min(1888).required(),
-        director: Joi.string.min(5).max(50).required(),
+    const schema = Joi.object({
+        name: Joi.string().min(5).max(50).required(),
+        genre: Joi.string().min(5).max(50).required(),
+        releaseYear: Joi.number().min(1888).required(), 
+        director: Joi.string().min(5).max(50).required(),
         image: Joi.string().optional(),
-    }
-    return Joi.validate(movie, schema)
+    });
+
+    return schema.validate(movie); 
+};
+
+module.exports = {
+    Movie,
+    validate: validateMovie
 }
-module.exports = Movie;
-exports.validate = validateMovie;

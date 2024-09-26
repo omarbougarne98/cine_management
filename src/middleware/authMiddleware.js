@@ -9,9 +9,8 @@ const auth = async (req, res, next) => {
     }
     try {
         const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
-        req.user = decode;
+        req.user = decoded;
 
-        
         next();
     } catch (error) {
         res.status(400).send({ error: "Invalid Token" });

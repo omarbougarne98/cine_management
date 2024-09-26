@@ -1,19 +1,21 @@
 const express = require('express');
 const cors = require('cors');
+
 const bodyParser = require('body-parser');
 const environment = require('./environments');
+const db = require('./startup/db');
 const userRoutes = require('./src/routes/user.route');
 const authRoutes = require('./src/routes/auth.route');
 const movieRoutes = require('./src/routes/movie.route');
 const error = require('./src/middleware/errorMiddleware');
 const winston = require('winston');
 const app = express();
-
+require('express-async-errors');
 require('./startup/config')(); 
 require('./startup/db')();
 require('./startup/logging')();
 require('./startup/validating')();
-
+db();
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
