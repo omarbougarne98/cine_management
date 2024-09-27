@@ -8,6 +8,7 @@ const userRoutes = require('./src/routes/user.route');
 const authRoutes = require('./src/routes/auth.route');
 const movieRoutes = require('./src/routes/movie.route');
 const roomRoutes = require('./src/routes/room.auth');
+const ticketRoutes = require('./src/routes/ticket.auth')
 const sessionRoutes = require('./src/routes/session.route');
 const error = require('./src/middleware/errorMiddleware');
 const winston = require('winston');
@@ -27,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/tickets', ticketRoutes)
 
 app.use(error);
 
