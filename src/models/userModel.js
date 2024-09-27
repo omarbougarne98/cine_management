@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+const crypto = require('crypto');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 
@@ -20,16 +21,22 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 5,
         maxlength: 1024
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
-
-
 userSchema.methods.generateAuthToken = function() {
-    const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'), 
-    {expiresIn: "1h"}
-); 
+    const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'), {expiresIn: "1h"});
     return token;
+};
+
+
+userSchema.methods.generatePasswordResetToken = function() {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.resetPasswordExpires = Date.now() + 10 * 60 * 1000; 
+    return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);
@@ -40,7 +47,6 @@ const validateUserRegistration  = (user) => {
         email: Joi.string().email().required(),
         password: Joi.string().min(5).max(1024).required()
     });
-
     return schema.validate(user); 
 };
 
@@ -49,13 +55,20 @@ const validateUserLogin = (user) => {
         email: Joi.string().email().required(),
         password: Joi.string().min(5).max(24).required()
     });
-
     return schema.validate(user); 
+};
+
+const validatePasswordReset = (data) => {
+    const schema = Joi.object({
+        password: Joi.string().min(5).max(1024).required(),
+        token: Joi.string().required()
+    });
+    return schema.validate(data);
 };
 
 module.exports = {
     User,         
     validateUserRegistration,
-    validateUserLogin
-
+    validateUserLogin,
+    validatePasswordReset
 };

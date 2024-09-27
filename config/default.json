@@ -1,3 +1,9 @@
 {
-    "jwtPrivateKey": "cinema_jwtPrivateKey"
+    "db": {
+        "uri": "mongodb://localhost:27017"
+
+    },
+    "jwtPrivateKey": "cinema_jwtPrivateKey",
+    "emailUsername": "kimaxak968@exweme.com",
+    "emailPassword": "123456789"
 }
